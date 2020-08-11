@@ -13,8 +13,15 @@
       </thead>
       <tbody>
         <tr v-for='(week, index) in calData' :key='index'>
-          <td class='days' v-for='(day, index) in week' :key='index'>
-            {{ day }}
+          <td
+            class='days'
+            v-for='(daynum, index) in week'
+            :key='index'
+            @click='dateClick(daynum)'
+            :class="{ today: isToday(daynum), active: day === daynum }"
+          >
+            <span v-if='isToday(daynum)'>today</span>
+            <span v-else>{{ daynum }}</span>
           </td>
         </tr>
       </tbody>
@@ -26,22 +33,34 @@
 export default {
   data() {
     return {
-      weekdays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      year: 2020,
-      month:3,
-      day:-1,
-      today: ''
+      weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      year: new Date().getFullYear(),
+      month: new Date().getMonth() + 1,
+      day: -1,
+      today: 11
     }
   },
   computed: {
     calData: function () {
       console.log(this.year + "-" + this.month + "のデータ作成")
-      var calData = []
-      calData[0] = [ 1, 2, 3, 4, 5, 6, 7]
-      calData[1] = [ 8, 9,10,11,12,13,14]
-      calData[2] = [15,16,17,18,19,20,21]
-      calData[3] = [22,23,24,25,26,27,28]
-      calData[4] = [29,30,31,"","","",""]
+      let calData = []
+      let firstWeekDay = new Date(this.year, this.month-1, 1).getDay()
+      let lastDay = new Date(this.year, this.month, 0).getDate()
+      let dayNum = 1
+      while(dayNum <= lastDay) {
+        let weekData = []
+        for (var i = 0; i <= 6; i++) {
+          if (calData.length === 0 && i < firstWeekDay) {
+            weekData[i] = ''
+          } else if (lastDay < dayNum) {
+            weekData[i] = ''
+          } else {
+            weekData[i] = dayNum
+            dayNum++
+          }
+        }
+        calData.push(weekData)
+      }
       return calData
     }
   },
@@ -59,7 +78,29 @@ export default {
         this.month = 0
       }
       this.month += 1
+    },
+    dateClick(daynum) {
+      this.day = daynum
+    },
+    isToday: function(day) {
+      var date = this.year + "-" + Number(this.month.toFixed(2)) + "-" + day
+      console.log(this.today, date)
+        if(this.today == date){
+            console.log(this.today)
+            return true
+        }
+        return false
     }
+  },
+  mounted() {
+    let date = new Date()
+    let y =date.getFullYear()
+    let m = Number(('0' + (date.getMonth() + 1)).slice(-2))
+    let d = ('0' + date.getDate()).slice(-2)
+
+    this.year = y
+    this.month = m
+    this.today = y + '-' + m + '-' + d
   }
 }
 </script>
