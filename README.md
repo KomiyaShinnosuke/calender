@@ -1,4 +1,6 @@
 # calender
+最初に参考にした資料
+- https://tech.pjin.jp/blog/2020/03/11/vue-calendar-for-mobile/
 
 ## Project setup
 ```
