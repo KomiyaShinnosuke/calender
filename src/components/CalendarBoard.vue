@@ -30,17 +30,20 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
+
 export default {
-  data() {
-    return {
-      weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-      year: new Date().getFullYear(),
-      month: new Date().getMonth() + 1,
-      day: -1,
-      today: 11
-    }
-  },
   computed: {
+    ...mapState([
+      'weekdays',
+      'year',
+      'month'
+    ]),
+    ...mapGetters([
+      'today',
+      'day'
+    ]),
     calData: function () {
       console.log(this.year + "-" + this.month + "のデータ作成")
       let calData = []
@@ -84,23 +87,11 @@ export default {
     },
     isToday: function(day) {
       var date = this.year + "-" + Number(this.month.toFixed(2)) + "-" + day
-      console.log(this.today, date)
         if(this.today == date){
-            console.log(this.today)
             return true
         }
         return false
     }
-  },
-  mounted() {
-    let date = new Date()
-    let y =date.getFullYear()
-    let m = Number(('0' + (date.getMonth() + 1)).slice(-2))
-    let d = ('0' + date.getDate()).slice(-2)
-
-    this.year = y
-    this.month = m
-    this.today = y + '-' + m + '-' + d
   }
 }
 </script>
