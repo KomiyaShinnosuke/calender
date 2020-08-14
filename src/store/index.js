@@ -23,9 +23,27 @@ export default new Vuex.Store({
     // ],
     weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     year: new Date().getFullYear(),
-    month: new Date().getMonth() + 1
+    month: new Date().getMonth() + 1,
+    day : 'a' // 何かしら文字列を入れないと空白が赤くなってしまうので、一時的に適当な文字列を入れた
   },
   mutations: {
+    setLastMonth(state, payload) {
+      if (state.month === 1) {
+        state.year -= 1
+        state.month = 13
+      }
+      state.month -= 1
+    },
+    setNextMonth(state, payload) {
+      if (state.month === 12) {
+        state.year += 1
+        state.month = 0
+      }
+      state.month += 1
+    },
+    dateClick(state, payload) {
+      state.day = payload
+    },
     // addCard(state, payload) {
     //   let i = Math.floor(Math.random () * 4)
     //   let j = Math.floor(Math.random () * 13)
@@ -49,19 +67,19 @@ export default new Vuex.Store({
     // }
   },
   actions: {
-    // addCard(context, payload) {
-    //   context.commit('addCard', payload)
-    // },
-    // quitCard(context, payload) {
-    //   context.commit('quitCard', payload)
-    // }
+    setLastMonth(context, payload) {
+      context.commit('setLastMonth', payload)
+    },
+    setNextMonth(context, payload) {
+      context.commit('setNextMonth', payload)
+    },
+    dateClick(context, payload) {
+      context.commit('dateClick', payload)
+    }
   },
   getters: {
     today: state => {
       return state.year + '-' + state.month + '-' + new Date().getDate()
-    },
-    day() {
-      return new Date().getDate()
     }
   }
 })

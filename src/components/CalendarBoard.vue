@@ -13,16 +13,11 @@
       </thead>
       <tbody>
         <tr v-for='(week, index) in calData' :key='index'>
-          <td
-            class='days'
+          <calendar-element
             v-for='(daynum, index) in week'
             :key='index'
-            @click='dateClick(daynum)'
-            :class="{ today: isToday(daynum), active: day === daynum }"
-          >
-            <span v-if='isToday(daynum)'>today</span>
-            <span v-else>{{ daynum }}</span>
-          </td>
+            :daynum='daynum'
+          />
         </tr>
       </tbody>
     </table>
@@ -32,8 +27,14 @@
 <script>
 import { mapState } from 'vuex'
 import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
+import * as consts from '../constants/constants'
+import CalendarElement from './CalendarElement'
 
 export default {
+  components: {
+    CalendarElement
+  },
   computed: {
     ...mapState([
       'weekdays',
@@ -44,6 +45,9 @@ export default {
       'today',
       'day'
     ]),
+    weekdays: function() {
+      return consts.WEEKDAYS
+    },
     calData: function () {
       console.log(this.year + "-" + this.month + "のデータ作成")
       let calData = []
@@ -68,23 +72,10 @@ export default {
     }
   },
   methods: {
-    setLastMonth() {
-      if (this.month === 1) {
-        this.year -= 1
-        this.month = 13
-      }
-      this.month -= 1
-    },
-    setNextMonth() {
-      if (this.month === 12) {
-        this.year += 1
-        this.month = 0
-      }
-      this.month += 1
-    },
-    dateClick(daynum) {
-      this.day = daynum
-    },
+    ...mapActions([
+      'setNextMonth',
+      'setLastMonth'
+    ]),
     isToday: function(day) {
       var date = this.year + "-" + Number(this.month.toFixed(2)) + "-" + day
         if(this.today == date){
