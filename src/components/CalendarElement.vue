@@ -1,23 +1,38 @@
 <template>
+  <!-- tdに対してselfを入れないとcloseを押してもイベントバブリングで閉じても閉じない現象が発生する -->
+  <!-- ただ、カレンダーの数字を押しても反応しなくなるのが直したいポイント。暫定的にspanタグにもメソッドを定義している -->
   <td
     class='days'
-    @click='dateClick(daynum)'
-    :class="{ today: isToday(daynum), active: isActive(daynum) }"
+    @click.self='openModal(daynum)'
+    :class="{ today: isToday(daynum) }"
   >
-    <span v-if='isToday(daynum)'>today</span>
-    <span v-else>{{ daynum }}</span>
+    <span v-if='isToday(daynum)' @click.self='openModal'>today</span>
+    <span v-else @click.self='openModal'>{{ daynum }}</span>
+    <AddScheduleDialog @close="closeModal" v-if="modal">
+      <p>Please Input Your Schedule!</p>
+      <div><input v-model="message"></div>
+      <template slot="footer">
+        <!-- ここに送信という文字列を入れなかった場合はcloseが表示される -->
+        <button @click="doSend">送信</button>
+      </template>
+    </AddScheduleDialog>
   </td>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { mapGetters } from 'vuex'
-import { mapActions } from 'vuex'
-import CalendarElement from './CalendarElement'
+import AddScheduleDialog from './AddScheduleDialog'
 
 export default {
   components: {
-    CalendarElement
+    AddScheduleDialog
+  },
+  data() {
+    return {
+      modal: false,
+      message: ''
+    }
   },
   props: {
     daynum: {
@@ -25,9 +40,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'dateClick'
-    ]),
     isToday: function(day) {
       const year = new Date().getFullYear()
       const month = new Date().getMonth() + 1
@@ -37,15 +49,20 @@ export default {
         }
         return false
     },
-    // 単なるdayでの区別しかしていないので、本当はやめたい
-    // ただ、googleカレンダーはクリックしたdayしか見ないので、
-    // クリックされたのを赤くする仕様は現状残しておいて、
-    // 予定を入れられるようになったら消してもいいかなと思ってる
-    isActive: function(day) {
-      if(this.day == day){
-        return true
+    openModal(day) {
+      if(day === ''){
+        return
       }
-      return false
+      this.modal = true
+    },
+    closeModal() {
+      this.modal = false
+    },
+    doSend() {
+      if (this.message.length > 0) {
+        this.message = ''
+        this.closeModal()
+      }
     }
   },
   computed: {
@@ -81,9 +98,6 @@ export default {
 }
 .today {
   background-color: #fcf8e3;
-}
-.active {
-  background-color: #ffc9d7;
 }
 
 </style>

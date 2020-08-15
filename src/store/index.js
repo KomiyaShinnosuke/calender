@@ -5,23 +5,22 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    // lists: [
-    //   {
-    //     day: '2020-8-11',
-    //     todos: [
-    //       { content: 'English' },
-    //       { content: 'Mathematics' }
-    //     ]
-    //   },
-    //   {
-    //     day: '2020-8-12',
-    //     todos: [
-    //       { content: 'English' },
-    //       { content: 'Mathematics' }
-    //     ]
-    //   }
-    // ],
-    weekdays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    lists: [
+      {
+        day: '2020-8-11',
+        todos: [
+          { content: 'English' },
+          { content: 'Mathematics' }
+        ]
+      },
+      {
+        day: '2020-8-12',
+        todos: [
+          { content: 'English' },
+          { content: 'Mathematics' }
+        ]
+      }
+    ],
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
     day : 'a' // 何かしら文字列を入れないと空白が赤くなってしまうので、一時的に適当な文字列を入れた
@@ -40,9 +39,6 @@ export default new Vuex.Store({
         state.month = 0
       }
       state.month += 1
-    },
-    dateClick(state, payload) {
-      state.day = payload
     },
     // addCard(state, payload) {
     //   let i = Math.floor(Math.random () * 4)

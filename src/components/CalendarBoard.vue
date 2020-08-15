@@ -114,9 +114,6 @@ export default {
 .today {
   background-color: #fcf8e3;
 }
-.active {
-  background-color: #ffc9d7;
-}
 
 .cal-header {
   font-size: 24px;
