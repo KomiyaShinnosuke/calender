@@ -13,7 +13,7 @@
       <div><input v-model="message"></div>
       <template slot="footer">
         <!-- ここに送信という文字列を入れなかった場合はcloseが表示される -->
-        <button @click="doSend">送信</button>
+        <button @click="addSchedule">送信</button>
       </template>
     </AddScheduleDialog>
   </td>
@@ -63,7 +63,15 @@ export default {
         this.message = ''
         this.closeModal()
       }
-    }
+    },
+    addSchedule: function() {
+      const day = this.year + '-' + this.month + '-' + this.daynum
+      if (this.message.length > 0) {
+        this.$store.dispatch('addSchedule', { day: day, context: this.message })
+        this.message = ''
+        this.closeModal()
+      }
+    },
   },
   computed: {
     ...mapState([
